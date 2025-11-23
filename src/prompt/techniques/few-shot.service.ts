@@ -28,7 +28,6 @@ export class FewShotService {
       .replace(/[`"']/g, '')                  // remove quotes/backticks
       .trim();
 
-    // If allowedLabels present, match one of them
     let finalLabel: string | null = null;
 
     const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
