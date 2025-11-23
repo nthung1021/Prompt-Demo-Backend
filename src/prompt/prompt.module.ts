@@ -3,11 +3,12 @@ import { HttpModule } from '@nestjs/axios';
 import { PromptController } from './prompt.controller';
 import { PromptService } from './prompt.service';
 import { ZeroShotService } from './techniques/zero-shot.service';
+import { FewShotService } from './techniques/few-shot.service';
 import { LlmClient } from './utils/llm-client';
 
 @Module({
   imports: [HttpModule],
   controllers: [PromptController],
-  providers: [PromptService, ZeroShotService, LlmClient]
+  providers: [PromptService, ZeroShotService, FewShotService, LlmClient]
 })
 export class PromptModule {}

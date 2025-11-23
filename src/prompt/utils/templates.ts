@@ -18,11 +18,49 @@ export function buildZeroShotPrompt(
 
   return `${instruction.trim()}
 
-Text:
-"${inText}"
+  Text:
+  "${inText}"
 
-${labelInstruction}
-IMPORTANT: Output must be ONLY the single label (no explanation, no bullets, no extra text, no code block).
-If you cannot determine a label, output "Unknown".
-`;
+  ${labelInstruction}
+  IMPORTANT: Output must be ONLY the single label (no explanation, no bullets, no extra text, no code block).
+  If you cannot determine a label, output "Unknown".
+  `;
+}
+
+export function buildFewShotPrompt(
+  input: string,
+  examples: Array<{ text: string; label?: string; summary?: string }>,
+  instruction = 'Perform the task as shown in the examples.',
+  allowedLabels?: string[]
+) {
+  const inText = sanitizeInput(input);
+
+  // Build example block (limit to first 3 examples)
+  const ex = (examples && examples.length) ? examples.slice(0, 3) : [];
+  let prefix = '';
+  for (const e of ex) {
+    if (e.label) {
+      prefix += `Text: "${sanitizeInput(e.text, 600)}"\nAnswer: ${sanitizeInput(e.label, 200)}\n--\n`;
+    } else if (e.summary) {
+      prefix += `Text: "${sanitizeInput(e.text, 600)}"\nSummary:\n${sanitizeInput(e.summary, 400)}\n--\n`;
+    } else {
+      prefix += `Text: "${sanitizeInput(e.text, 600)}"\nOutput:\n${'\n'}--\n`;
+    }
+  }
+
+  const labelInstruction = Array.isArray(allowedLabels) && allowedLabels.length
+    ? `Return EXACTLY one of these labels (case-sensitive as written): ${allowedLabels.join(', ')}.`
+    : `Return ONLY the final answer (no explanation).`;
+
+  return `${instruction.trim()}
+
+  ${prefix}
+  Now apply the same format to this input:
+
+  Text:
+  "${inText}"
+
+  ${labelInstruction}
+  IMPORTANT: Output must be ONLY the final answer (no explanations, no bullet points, no extra text). If unsure, return "Unknown".
+  `;
 }
