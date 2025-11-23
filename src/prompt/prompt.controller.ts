@@ -3,7 +3,8 @@ import { PromptService } from './prompt.service';
 import { RunRequestDto } from './dto/run-request.dto';
 
 const allowed_techniques = [
-  'zero_shot'
+  'zero_shot',
+  'few_shot'
 ]
 
 @Controller('prompt')

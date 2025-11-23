@@ -8,15 +8,10 @@ export class ZeroShotService {
 
   async run(inputText: string, params: any = {}) {
     const start = Date.now();
-
     const instruction = params?.instruction;
 
-    const allowedLabels: string[] | undefined = Array.isArray(params?.allowedLabels)
-      ? params.allowedLabels.map((s: string) => String(s).trim()).filter(Boolean)
-      : undefined;
-
     // Build strict prompt: enforce single-label-only output
-    const prompt = buildZeroShotPrompt(inputText, instruction, allowedLabels);
+    const prompt = buildZeroShotPrompt(inputText, instruction);
 
     // Call model with deterministic settings
     const out = await this.llm.generate(prompt, {
@@ -34,38 +29,22 @@ export class ZeroShotService {
       .replace(/[`"']/g, '')                   // remove quotes/backticks
       .trim();
 
-    // If allowedLabels provided, try to match one of them (case-insensitive)
     let finalLabel: string | null = null;
-    if (allowedLabels && allowedLabels.length > 0) {
-      const esc = allowedLabels.map(l => l.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|');
-      const re = new RegExp(`\\b(${esc})\\b`, 'i');
-      const m = cleaned.match(re);
-      if (m && m[1]) {
-        // standardize to the exact allowed label case if possible
-        const matched = m[1];
-        // find the allowed label that case-insensitively matches
-        const canonical = allowedLabels.find(a => a.toLowerCase() === matched.toLowerCase());
-        finalLabel = canonical ?? matched;
-      }
-    }
 
-    // If no allowedLabels or no match, try to extract a single token/word from last non-empty line
-    if (!finalLabel) {
-      const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-      const candidate = lines.length ? lines[lines.length - 1] : cleaned;
-      // remove trailing punctuation
-      const single = candidate.replace(/[^\p{L}\p{N}\s]/gu, '').trim(); // letters/numbers/spaces
-      // if single contains multiple words, take last word (common when model echoes choices)
-      const words = single.split(/\s+/).filter(Boolean);
-      if (words.length === 1) {
-        finalLabel = words[0];
-      } else if (words.length > 1) {
-        // attempt to find a word that looks like a label (capitalized or matches common sentiment words)
-        const prefer = words.find(w => /^(positive|neutral|negative)$/i.test(w));
-        finalLabel = prefer ?? words[words.length - 1];
-      } else {
-        finalLabel = null;
-      }
+    const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const candidate = lines.length ? lines[lines.length - 1] : cleaned;
+    // remove trailing punctuation
+    const single = candidate.replace(/[^\p{L}\p{N}\s]/gu, '').trim(); // letters/numbers/spaces
+    // if single contains multiple words, take last word (common when model echoes choices)
+    const words = single.split(/\s+/).filter(Boolean);
+    if (words.length === 1) {
+      finalLabel = words[0];
+    } else if (words.length > 1) {
+      // attempt to find a word that looks like a label (capitalized or matches common sentiment words)
+      const prefer = words.find(w => /^(positive|neutral|negative)$/i.test(w));
+      finalLabel = prefer ?? words[words.length - 1];
+    } else {
+      finalLabel = null;
     }
 
     // Final normalization and fallback

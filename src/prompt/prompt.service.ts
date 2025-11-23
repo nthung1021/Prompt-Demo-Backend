@@ -3,11 +3,13 @@ import { ZeroShotService } from './techniques/zero-shot.service';
 import { LlmClient } from './utils/llm-client';
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
+import { FewShotService } from './techniques/few-shot.service';
 
 @Injectable()
 export class PromptService {
   constructor(
     private readonly zeroShot: ZeroShotService,
+    private readonly fewShot: FewShotService,
     private readonly llm: LlmClient
   ) {}
 
@@ -17,6 +19,9 @@ export class PromptService {
     switch (technique) {
       case 'zero_shot':
         result = await this.zeroShot.run(inputText, params);
+        break;
+      case 'few_shot':
+        result = await this.fewShot.run(inputText, params);
         break;
       default:
         throw new Error('Unsupported technique');
