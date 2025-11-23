@@ -29,7 +29,7 @@
 
 Prompt Engineering Demo App - A web application that allow users to test all the prompt techniques (used for AI && LLMs), with detail template for each techniques (both input and output)
 
-# Add New Prompt Technique — Frontend & Backend Guide
+# Add New Prompt Technique — Backend Guide
 
 This document explains **how to add a new prompt technique** to the demo app . It is written for team members who will implement a new technique (for example: ReAct, RAG, Self-Consistency, PAL). Follow the steps below to add the technique cleanly, consistently, and safely.
 
