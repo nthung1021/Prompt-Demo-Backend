@@ -157,6 +157,35 @@ Remember to add the new service to `RunModule` providers.
 * If you want to implement any techniques that is not mentioned in these files, feel free to add it (if you can), but make sure both the file have the technique you want to make
 * However, you **must include the technique service** (e.g. RAGService, ReActService) you implemented in the `Provider` of `prompt.module.ts`, if not, you code will not run properly.
 
+### 8. API URL and Environment Variables
+
+Go to [Google AI Studio](https://aistudio.google.com) and create an API key on there, after that copy the API key they provide to you (for later use below here)
+
+From the `.env.example` file given in this repo here, create your own `.env` file to save your key, URL and model you want to use
+
+Use the **REST generateContent endpoint** for Gemini:
+
+```
+https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={API_KEY}
+```
+
+#### Example for `gemini-2.0-flash`
+
+```
+LLM_PROVIDER=google
+LLM_API_URL=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+LLM_API_KEY=YOUR_API_KEY_HERE
+LLM_MODEL=gemini-2.0-flash
+MAX_INPUT_CHARS=4000
+```
+
+#### Important Notes
+
+* **Do NOT include `?key=`** inside `LLM_API_URL` — your backend already appends it.
+* Keep the model name matching exactly the Google model you enabled.
+* Your backend should call:
+  `POST LLM_API_URL?key=API_KEY`
+
 ---
 
 # Example: Adding `react` (ReAct) technique — Minimal Files
