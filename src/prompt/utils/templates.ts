@@ -31,7 +31,6 @@ export function buildFewShotPrompt(
   input: string,
   examples: Array<{ text: string; label?: string; summary?: string }>,
   instruction = 'Perform the task as shown in the examples.',
-  allowedLabels?: string[]
 ) {
   const inText = sanitizeInput(input);
 
@@ -48,10 +47,6 @@ export function buildFewShotPrompt(
     }
   }
 
-  const labelInstruction = Array.isArray(allowedLabels) && allowedLabels.length
-    ? `Return EXACTLY one of these labels (case-sensitive as written): ${allowedLabels.join(', ')}.`
-    : `Return ONLY the final answer (no explanation).`;
-
   return `${instruction.trim()}
 
   ${prefix}
@@ -60,7 +55,6 @@ export function buildFewShotPrompt(
   Text:
   "${inText}"
 
-  ${labelInstruction}
   IMPORTANT: Output must be ONLY the final answer (no explanations, no bullet points, no extra text). If unsure, return "Unknown".
   `;
 }
