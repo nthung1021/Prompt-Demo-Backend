@@ -4,12 +4,14 @@ import { LlmClient } from './utils/llm-client';
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import { FewShotService } from './techniques/few-shot.service';
+import { ChainOfThoughtService } from './techniques/chain-of-thought.service';
 
 @Injectable()
 export class PromptService {
   constructor(
     private readonly zeroShot: ZeroShotService,
     private readonly fewShot: FewShotService,
+    private readonly chainOfThought: ChainOfThoughtService,
     private readonly llm: LlmClient
   ) {}
 
@@ -22,6 +24,27 @@ export class PromptService {
         break;
       case 'few_shot':
         result = await this.fewShot.run(inputText, params);
+        break;
+      case 'chain_of_thought':
+        result = await this.chainOfThought.run(inputText, params);
+        break;
+      case 'program_aided_language_models':
+        // result = await this.PALM.run(inputText, params);
+        break;
+      case 'self_consistency':
+        // result = await this.selfConsistency.run(inputText, params);
+        break;
+      case 'directional_stimulus':
+        // result = await this.directionalStimulus.run(inputText, params);
+        break;
+      case 'reflextion':
+        // result = await this.reflextion.run(inputText, params);
+        break;
+      case 'rag':
+        // result = await this.RAG.run(inputText, params);
+        break;
+      case 'react':
+        // result = await this.reAct.run(inputText, params);
         break;
       default:
         throw new Error('Unsupported technique');
