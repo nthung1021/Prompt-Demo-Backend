@@ -52,3 +52,27 @@ export function buildFewShotPrompt(
   IMPORTANT: Output must be ONLY the final answer (no explanations, no bullet points, no extra text). If unsure, return "Unknown".
   `;
 }
+
+export function buildChainOfThoughtPrompt(
+  input: string,
+  instruction = 'Reason step-by-step about the prompt, then provide a concise final answer.',
+) {
+  const inText = sanitizeInput(input);
+
+  return `${instruction.trim()}
+
+  Text:
+  "${inText}"
+
+  REQUIREMENTS:
+  - First output a numbered REASONING block (prefix the block exactly with "REASONING:").
+  - Then output a single-line "FINAL_ANSWER: " followed by the final answer.
+  - DO NOT output any additional text outside REASONING and FINAL_ANSWER.
+
+  REASONING:
+  1)
+  2)
+
+  FINAL_ANSWER:
+  `;
+}
