@@ -28,6 +28,24 @@ export class PromptService {
       case 'chain_of_thought':
         result = await this.chainOfThought.run(inputText, params);
         break;
+      case 'program_aided_language_models':
+        // result = await this.PALM.run(inputText, params);
+        break;
+      case 'self_consistency':
+        // result = await this.selfConsistency.run(inputText, params);
+        break;
+      case 'directional_stimulus':
+        // result = await this.directionalStimulus.run(inputText, params);
+        break;
+      case 'reflextion':
+        // result = await this.reflextion.run(inputText, params);
+        break;
+      case 'rag':
+        // result = await this.RAG.run(inputText, params);
+        break;
+      case 'react':
+        // result = await this.reAct.run(inputText, params);
+        break;
       default:
         throw new Error('Unsupported technique');
     }

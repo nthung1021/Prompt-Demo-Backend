@@ -5,7 +5,13 @@ import { RunRequestDto } from './dto/run-request.dto';
 const allowed_techniques = [
   'zero_shot',
   'few_shot',
-  'chain_of_thought'
+  'chain_of_thought',
+  'program_aided_language_models',
+  'self_consistency',
+  'directional_stimulus',
+  'reflextion',
+  'rag',
+  'react'
 ]
 
 @Controller('prompt')

@@ -15,7 +15,13 @@ import { ChainOfThoughtService } from './techniques/chain-of-thought.service';
     LlmClient,
     ZeroShotService, 
     FewShotService,
-    ChainOfThoughtService
+    ChainOfThoughtService,
+    //PALMService,
+    //SelfConsistencyService,
+    //DirectionalStimulusService,
+    //ReflextionService,
+    //RAGService,
+    //ReActService,
   ]
 })
 export class PromptModule {}
