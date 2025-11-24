@@ -103,3 +103,33 @@ export function buildPalPrompt(
   \`\`\`
   `;
 }
+
+export function buildSelfConsistencyPrompt(
+  input: string,
+  instruction = 'You are solving this problem using self-consistency.',
+) {
+  const inText = sanitizeInput(input);
+
+  return `${instruction.trim()}
+Generate multiple distinct reasoning paths to explore different approaches.
+Each reasoning path should be short and logically coherent.
+
+After generating at least 5 different reasoning paths, determine the final answer by selecting the most common conclusion among them.
+
+Format your response as:
+
+Reasoning Paths:
+
+1. ...
+2. ...
+3. ...
+4. ...
+5. ...
+
+Final Answer: <answer>
+
+Problem:
+
+"${inText}"
+  `;
+}

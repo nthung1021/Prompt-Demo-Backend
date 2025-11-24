@@ -6,6 +6,7 @@ import { resolve } from 'path';
 import { FewShotService } from './techniques/few-shot.service';
 import { ChainOfThoughtService } from './techniques/chain-of-thought.service';
 import { PalService } from './techniques/pal.service';
+import { SelfConsistencyService } from './techniques/self-consistency.service';
 
 @Injectable()
 export class PromptService {
@@ -14,6 +15,7 @@ export class PromptService {
     private readonly fewShot: FewShotService,
     private readonly chainOfThought: ChainOfThoughtService,
     private readonly palService: PalService,
+    private readonly selfConsistency: SelfConsistencyService,
     private readonly llm: LlmClient,
   ) {}
 
@@ -34,7 +36,7 @@ export class PromptService {
         result = await this.palService.run(inputText, params);
         break;
       case 'self_consistency':
-        // result = await this.selfConsistency.run(inputText, params);
+        result = await this.selfConsistency.run(inputText, params);
         break;
       case 'directional_stimulus':
         // result = await this.directionalStimulus.run(inputText, params);

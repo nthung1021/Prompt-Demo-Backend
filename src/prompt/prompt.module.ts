@@ -7,6 +7,7 @@ import { FewShotService } from './techniques/few-shot.service';
 import { LlmClient } from './utils/llm-client';
 import { ChainOfThoughtService } from './techniques/chain-of-thought.service';
 import { PalService } from './techniques/pal.service';
+import { SelfConsistencyService } from './techniques/self-consistency.service';
 
 @Module({
   imports: [HttpModule],
@@ -18,7 +19,7 @@ import { PalService } from './techniques/pal.service';
     FewShotService,
     ChainOfThoughtService,
     PalService,
-    //SelfConsistencyService,
+    SelfConsistencyService,
     //DirectionalStimulusService,
     //ReflextionService,
     //RAGService,
