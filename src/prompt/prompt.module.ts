@@ -8,6 +8,7 @@ import { LlmClient } from './utils/llm-client';
 import { ChainOfThoughtService } from './techniques/chain-of-thought.service';
 import { PalService } from './techniques/pal.service';
 import { SelfConsistencyService } from './techniques/self-consistency.service';
+import { DirectionalStimulusService } from './techniques/directional-stimulus.service';
 
 @Module({
   imports: [HttpModule],
@@ -20,7 +21,7 @@ import { SelfConsistencyService } from './techniques/self-consistency.service';
     ChainOfThoughtService,
     PalService,
     SelfConsistencyService,
-    //DirectionalStimulusService,
+    DirectionalStimulusService,
     //ReflextionService,
     //RAGService,
     //ReActService,

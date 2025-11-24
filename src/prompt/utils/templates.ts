@@ -133,3 +133,60 @@ Problem:
 "${inText}"
   `;
 }
+
+export function buildDirectionalStimuliGeneratorPrompt(input: string) {
+  const inText = sanitizeInput(input);
+  return `You are a system that generates directional reasoning stimuli for another model.
+
+Your task: Given a problem, produce a list of high-level reasoning cues that **guide solution strategy** without providing detailed step-by-step reasoning or the answer.
+
+Requirements for the directional stimuli:
+
+- Should nudge reasoning (strategy, heuristics, principles)
+- Should NOT reveal the final answer
+- Should NOT include full step-by-step logic
+- Should be generic enough to apply across multiple solution paths
+- Should be 4–7 bullet points
+- Each bullet should be concise (one short sentence)
+- Avoid explicit calculations or symbolic manipulation
+
+Output Format (exactly this):
+Directional Stimuli:
+
+- <stimulus 1>
+- <stimulus 2>
+- <stimulus 3>
+- <stimulus 4>
+- <stimulus 5>
+
+Problem:
+"${inText}"
+`;
+}
+
+export function buildDirectionalStimulusSolverPrompt(
+  input: string,
+  stimuli: string,
+) {
+  const inText = sanitizeInput(input);
+  return `You will solve the problem using high-level reasoning guidance.
+Follow the directional stimuli below to guide your approach, but do not produce a detailed chain-of-thought.
+
+Directional Stimuli:
+
+${stimuli}
+
+Rules:
+
+- Use concise reasoning (2–5 sentences).
+- Do not reveal hidden reasoning or internal deliberation.
+- Focus on correctness, not verbosity.
+
+Task:
+"${inText}"
+
+Output format:
+Answer: <final answer>
+Justification: <brief reasoning>
+`;
+}
