@@ -29,7 +29,7 @@ export function buildFewShotPrompt(
   const inText = sanitizeInput(input);
 
   // Build example block (limit to first 3 examples)
-  const ex = (examples && examples.length) ? examples.slice(0, 3) : [];
+  const ex = examples && examples.length ? examples.slice(0, 3) : [];
   let prefix = '';
   for (const e of ex) {
     if (e.label) {
@@ -74,5 +74,32 @@ export function buildChainOfThoughtPrompt(
   2)
 
   FINAL_ANSWER:
+  `;
+}
+
+export function buildPalPrompt(
+  input: string,
+  instruction = 'Write a JavaScript function named `solution` that solves the problem and returns the answer.',
+) {
+  const inText = sanitizeInput(input);
+
+  return `${instruction.trim()}
+
+  Text:
+  "${inText}"
+
+  REQUIREMENTS:
+  - First output a JAVASCRIPT_CODE block (prefix the block exactly with "JAVASCRIPT_CODE:").
+  - The code must define a function named \`solution\` that returns the answer.
+  - The code should be valid JavaScript.
+  - DO NOT output the final answer text directly. The answer will be obtained by running the code.
+
+  JAVASCRIPT_CODE:
+  \`\`\`javascript
+  function solution() {
+    // Write your code here
+    return ...;
+  }
+  \`\`\`
   `;
 }

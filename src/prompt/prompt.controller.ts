@@ -1,4 +1,10 @@
-import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { PromptService } from './prompt.service';
 import { RunRequestDto } from './dto/run-request.dto';
 
@@ -6,13 +12,13 @@ const allowed_techniques = [
   'zero_shot',
   'few_shot',
   'chain_of_thought',
-  'program_aided_language_models',
+  'pal',
   'self_consistency',
   'directional_stimulus',
   'reflextion',
   'rag',
-  'react'
-]
+  'react',
+];
 
 @Controller('prompt')
 export class PromptController {
@@ -23,14 +29,24 @@ export class PromptController {
     // Enforce exactly one technique selected
     if (!body.techniques || body.techniques.length !== 1) {
       throw new HttpException(
-        { message: 'Exactly one technique must be selected', allowed: allowed_techniques },
-        HttpStatus.BAD_REQUEST
+        {
+          message: 'Exactly one technique must be selected',
+          allowed: allowed_techniques,
+        },
+        HttpStatus.BAD_REQUEST,
       );
     }
     const technique = body.techniques[0];
     if (!allowed_techniques.includes(technique)) {
-      throw new HttpException({ message: 'Technique not supported' }, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        { message: 'Technique not supported' },
+        HttpStatus.BAD_REQUEST,
+      );
     }
-    return this.promptService.runSingleTechnique(body.inputText, technique, body.params ?? {});
+    return this.promptService.runSingleTechnique(
+      body.inputText,
+      technique,
+      body.params ?? {},
+    );
   }
 }

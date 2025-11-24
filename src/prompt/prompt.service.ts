@@ -5,6 +5,7 @@ import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import { FewShotService } from './techniques/few-shot.service';
 import { ChainOfThoughtService } from './techniques/chain-of-thought.service';
+import { PalService } from './techniques/pal.service';
 
 @Injectable()
 export class PromptService {
@@ -12,7 +13,8 @@ export class PromptService {
     private readonly zeroShot: ZeroShotService,
     private readonly fewShot: FewShotService,
     private readonly chainOfThought: ChainOfThoughtService,
-    private readonly llm: LlmClient
+    private readonly palService: PalService,
+    private readonly llm: LlmClient,
   ) {}
 
   async runSingleTechnique(inputText: string, technique: string, params: any) {
@@ -28,8 +30,8 @@ export class PromptService {
       case 'chain_of_thought':
         result = await this.chainOfThought.run(inputText, params);
         break;
-      case 'program_aided_language_models':
-        // result = await this.PALM.run(inputText, params);
+      case 'pal':
+        result = await this.palService.run(inputText, params);
         break;
       case 'self_consistency':
         // result = await this.selfConsistency.run(inputText, params);
@@ -54,7 +56,7 @@ export class PromptService {
     return {
       technique,
       model: this.llm.modelName,
-      ...result
+      ...result,
     };
   }
 }
