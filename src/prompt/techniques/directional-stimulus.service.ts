@@ -18,6 +18,7 @@ export class DirectionalStimulusService {
       temperature: 0.7,
       maxOutputTokens: 500,
     });
+    console.log(genOut.text);
     const genText = String(genOut.text ?? '').trim();
 
     // Parse stimuli

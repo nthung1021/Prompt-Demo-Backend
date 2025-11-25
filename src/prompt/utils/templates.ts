@@ -138,7 +138,10 @@ export function buildDirectionalStimuliGeneratorPrompt(input: string) {
   const inText = sanitizeInput(input);
   return `You are a system that generates directional reasoning stimuli for another model.
 
-Your task: Given a problem, produce a list of high-level reasoning cues that **guide solution strategy** without providing detailed step-by-step reasoning or the answer.
+Problem:
+"${inText}"
+
+Your task: Given the problem, produce a list of high-level reasoning cues that **guide solution strategy** without providing detailed step-by-step reasoning or the answer.
 
 Requirements for the directional stimuli:
 
@@ -158,9 +161,6 @@ Directional Stimuli:
 - <stimulus 3>
 - <stimulus 4>
 - <stimulus 5>
-
-Problem:
-"${inText}"
 `;
 }
 
