@@ -190,3 +190,30 @@ Answer: <final answer>
 Justification: <brief reasoning>
 `;
 }
+
+export function buildReActPrompt(input: string, opts: any = {}) {
+  const inText = sanitizeInput(input);
+  const toolSpec = opts?.toolSpec ?? 'search, calculate, lookup, analyze';
+  
+  return `You are an agent that can REASON and ACT to solve problems step by step.
+
+You have access to the following tools: ${toolSpec}
+
+Use this format:
+Thought: [your reasoning about what to do next]
+Action: [the action to take - can be: search, calculate, lookup, analyze, or finish]
+Action Input: [the input to the action]
+Observation: [result of the action]
+
+Continue this process until you can provide a final answer.
+
+When you have enough information, use:
+Action: finish
+Action Input: [your final answer]
+
+Task: "${inText}"
+
+Begin with your first thought about how to approach this problem.
+
+Thought:`;
+}

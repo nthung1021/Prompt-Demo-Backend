@@ -9,6 +9,7 @@ import { ChainOfThoughtService } from './techniques/chain-of-thought.service';
 import { PalService } from './techniques/pal.service';
 import { SelfConsistencyService } from './techniques/self-consistency.service';
 import { DirectionalStimulusService } from './techniques/directional-stimulus.service';
+import { ReActService } from './techniques/react.service';
 
 @Module({
   imports: [HttpModule],
@@ -22,9 +23,9 @@ import { DirectionalStimulusService } from './techniques/directional-stimulus.se
     PalService,
     SelfConsistencyService,
     DirectionalStimulusService,
+    ReActService,
     //ReflextionService,
     //RAGService,
-    //ReActService,
   ],
 })
 export class PromptModule {}
