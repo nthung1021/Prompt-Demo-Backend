@@ -1,6 +1,8 @@
 // src/run/utils/llm-client.ts
 import axios from 'axios';
 import { Injectable } from '@nestjs/common';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -10,6 +12,74 @@ export class LlmClient {
   apiUrlBase = process.env.LLM_API_URL ?? '';
   apiKey = process.env.LLM_API_KEY ?? '';
   modelName = process.env.LLM_MODEL ?? 'gemini-2.0-flash';
+  private genAI: GoogleGenerativeAI;
+
+  constructor() {
+    if (this.apiKey && this.provider === 'google') {
+      try {
+        this.genAI = new GoogleGenerativeAI(this.apiKey);
+      } catch (error) {
+        console.error(`Failed to initialize Google Generative AI SDK:`, error);
+      }
+    }
+  }
+
+  // Enhanced generate method that supports files
+  async generateWithFiles(prompt: string, files: Array<{path: string, mimeType: string}> = [], opts: any = {}): Promise<{ text: string; raw: any; usage?: any; modelVersion?: string; responseId?: string }> {
+    if (!prompt) return { text: '', raw: null };
+
+    const timeoutMs = 30000; // Increased timeout for file processing
+    try {
+      if (this.provider === 'google' && this.genAI) {
+        const model = this.genAI.getGenerativeModel({ model: this.modelName });
+
+        // Prepare parts for the request
+        const parts: any[] = [{ text: prompt }];
+
+        // Add file parts if provided
+        for (const file of files) {
+          if (fs.existsSync(file.path)) {
+            const fileData = fs.readFileSync(file.path);
+            parts.push({
+              inlineData: {
+                data: fileData.toString('base64'),
+                mimeType: file.mimeType
+              }
+            });
+          }
+        }
+
+        const generationConfig = {
+          temperature: typeof opts.temperature !== 'undefined' ? opts.temperature : 0.0,
+          maxOutputTokens: typeof opts.maxOutputTokens !== 'undefined' ? opts.maxOutputTokens : (opts.maxTokens ?? 1200),
+        };
+
+        const result = await model.generateContent({
+          contents: [{ role: 'user', parts }],
+          generationConfig
+        });
+        
+        const response = result.response;
+        const text = response.text();
+        const usage = response.usageMetadata || null;
+        
+        return { 
+          text, 
+          raw: response, 
+          usage, 
+          modelVersion: this.modelName, 
+          responseId: undefined 
+        };
+      } else {
+        // Fall back to REST API if SDK is not available or files are not supported
+        return this.generate(prompt, opts);
+      }
+    } catch (err: any) {
+      console.error('LLM call error with files:', err?.message || err);
+      const errMsg = err?.response?.data?.error?.message ?? err?.message ?? 'Unknown Error Occurs';
+      return { text: `LLM_ERROR: ${errMsg}`, raw: err?.response?.data ?? err?.message };
+    }
+  }
 
   async generate(prompt: string, opts: any = {}): Promise<{ text: string; raw: any; usage?: any; modelVersion?: string; responseId?: string }> {
     if (!prompt) return { text: '', raw: null };
@@ -113,7 +183,7 @@ export class LlmClient {
         return { text, raw: data, usage: data?.usage ?? null };
       }
     } catch (err: any) {
-      console.error('LLM call error', err?.response?.data ?? err?.message);
+      console.error('LLM call error:', err?.message || err);
       const errMsg = err?.response?.data?.error?.message ?? err?.message ?? 'Unknown Error Occurs';
       return { text: `LLM_ERROR: ${errMsg}`, raw: err?.response?.data ?? err?.message };
     }
