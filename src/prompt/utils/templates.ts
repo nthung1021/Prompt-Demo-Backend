@@ -217,3 +217,42 @@ Begin with your first thought about how to approach this problem.
 
 Thought:`;
 }
+
+export function buildReflexionPrompt(input: string, opts: any = {}) {
+  const inText = sanitizeInput(input);
+  const maxReflections = opts?.maxReflections ?? 3;
+  
+  return `You are an intelligent agent that can solve problems through self-reflexion and iterative improvement.
+
+Your task is to solve the following problem using a reflexion-based approach:
+
+"${inText}"
+
+Process:
+1. First, provide an initial attempt at solving the problem
+2. Then, reflect on your initial attempt - identify potential issues, errors, or improvements
+3. Based on your reflexion, provide a revised solution
+4. Continue this reflexion process up to ${maxReflections} times if needed
+
+Format your response as:
+
+INITIAL_ATTEMPT:
+[Your first attempt at solving the problem]
+
+REFLECTION_1:
+[Critical analysis of your initial attempt - what could be wrong or improved?]
+
+REVISED_SOLUTION_1:
+[Your improved solution based on reflexion]
+
+REFLECTION_2:
+[Further reflexion on the revised solution if needed]
+
+REVISED_SOLUTION_2:
+[Further improved solution if needed]
+
+FINAL_ANSWER:
+[Your best final answer after all reflexions]
+
+Begin with your initial attempt:`;
+}
