@@ -1,9 +1,0 @@
-This is a test document for the RAG system.
-
-RAG (Retrieval-Augmented Generation) is a powerful technique that combines information retrieval with language generation. It works by:
-
-1. Retrieving relevant documents from a knowledge base
-2. Using those documents as context for the language model
-3. Generating responses that are grounded in the retrieved information
-
-This approach helps reduce hallucinations and provides more accurate, factual responses.

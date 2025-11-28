@@ -1,5 +1,0 @@
-[PDF Document: Prompt Engineering.pdf]
-
-This PDF file has been uploaded and can be processed by Gemini 2.0 Flash for content analysis, summarization, and question answering. The file supports direct analysis without manual text extraction.
-
-File uploaded successfully and ready for AI processing.
