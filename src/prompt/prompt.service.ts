@@ -8,6 +8,7 @@ import { ChainOfThoughtService } from './techniques/chain-of-thought.service';
 import { PalService } from './techniques/pal.service';
 import { SelfConsistencyService } from './techniques/self-consistency.service';
 import { DirectionalStimulusService } from './techniques/directional-stimulus.service';
+import { ReActService } from './techniques/react.service';
 
 @Injectable()
 export class PromptService {
@@ -18,6 +19,7 @@ export class PromptService {
     private readonly palService: PalService,
     private readonly selfConsistency: SelfConsistencyService,
     private readonly directionalStimulus: DirectionalStimulusService,
+    private readonly reactService: ReActService,
     private readonly llm: LlmClient,
   ) {}
 
@@ -50,7 +52,7 @@ export class PromptService {
         // result = await this.RAG.run(inputText, params);
         break;
       case 'react':
-        // result = await this.reAct.run(inputText, params);
+        result = await this.reactService.run(inputText, params);
         break;
       default:
         throw new Error('Unsupported technique');
