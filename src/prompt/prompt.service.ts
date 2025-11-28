@@ -10,6 +10,7 @@ import { SelfConsistencyService } from './techniques/self-consistency.service';
 import { DirectionalStimulusService } from './techniques/directional-stimulus.service';
 import { ReActService } from './techniques/react.service';
 import { ReflexionService } from './techniques/reflextion.service';
+import { RAGService } from './techniques/rag.service';
 
 @Injectable()
 export class PromptService {
@@ -22,6 +23,7 @@ export class PromptService {
     private readonly directionalStimulus: DirectionalStimulusService,
     private readonly reactService: ReActService,
     private readonly reflexionService: ReflexionService,
+    private readonly ragService: RAGService,
     private readonly llm: LlmClient,
   ) {}
 
@@ -51,7 +53,7 @@ export class PromptService {
         result = await this.reflexionService.run(inputText, params);
         break;
       case 'rag':
-        // result = await this.RAG.run(inputText, params);
+        result = await this.ragService.run(inputText, params);
         break;
       case 'react':
         result = await this.reactService.run(inputText, params);

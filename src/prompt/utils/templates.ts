@@ -256,3 +256,50 @@ FINAL_ANSWER:
 
 Begin with your initial attempt:`;
 }
+
+export function buildRAGPrompt(
+  query: string,
+  retrievedDocs: Array<{ content: string; source: string; relevanceScore?: number }>,
+  options: { includeRetrievalSteps?: boolean; reasoningStyle?: string } = {}
+) {
+  const queryText = sanitizeInput(query);
+  const { includeRetrievalSteps = true, reasoningStyle = 'analytical' } = options;
+
+  // Build context from retrieved documents
+  let context = '';
+  if (retrievedDocs.length > 0) {
+    context = 'CONTEXT INFORMATION:\n';
+    retrievedDocs.forEach((doc, index) => {
+      const docContent = sanitizeInput(doc.content, 800);
+      context += `Document ${index + 1} (Source: ${doc.source}):\n${docContent}\n\n`;
+    });
+  }
+
+  let prompt = `You are an AI assistant that uses Retrieval-Augmented Generation (RAG) to answer questions based on provided context and your knowledge.
+
+${context}
+
+QUERY: ${queryText}
+
+INSTRUCTIONS:
+1. First, analyze the provided context documents to find relevant information
+2. Use ${reasoningStyle} reasoning to connect the information from multiple sources
+3. Synthesize information from the context with your existing knowledge
+4. Provide a comprehensive and accurate response
+5. Cite your sources when referencing specific information from the documents
+
+`;
+
+  if (includeRetrievalSteps) {
+    prompt += `Please structure your response as follows:
+- DOCUMENT ANALYSIS: Brief analysis of what information is available in the provided documents
+- REASONING: Your analytical process connecting the information
+- ANSWER: Your final comprehensive response to the query
+
+`;
+  }
+
+  prompt += `Please provide a thorough and well-reasoned response based on the available context.`;
+
+  return prompt;
+}
