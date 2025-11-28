@@ -10,6 +10,7 @@ import { PalService } from './techniques/pal.service';
 import { SelfConsistencyService } from './techniques/self-consistency.service';
 import { DirectionalStimulusService } from './techniques/directional-stimulus.service';
 import { ReActService } from './techniques/react.service';
+import { ReflexionService } from './techniques/reflextion.service';
 
 @Module({
   imports: [HttpModule],
@@ -24,7 +25,7 @@ import { ReActService } from './techniques/react.service';
     SelfConsistencyService,
     DirectionalStimulusService,
     ReActService,
-    //ReflextionService,
+    ReflexionService,
     //RAGService,
   ],
 })

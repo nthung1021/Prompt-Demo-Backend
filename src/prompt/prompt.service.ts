@@ -9,6 +9,7 @@ import { PalService } from './techniques/pal.service';
 import { SelfConsistencyService } from './techniques/self-consistency.service';
 import { DirectionalStimulusService } from './techniques/directional-stimulus.service';
 import { ReActService } from './techniques/react.service';
+import { ReflexionService } from './techniques/reflextion.service';
 
 @Injectable()
 export class PromptService {
@@ -20,6 +21,7 @@ export class PromptService {
     private readonly selfConsistency: SelfConsistencyService,
     private readonly directionalStimulus: DirectionalStimulusService,
     private readonly reactService: ReActService,
+    private readonly reflexionService: ReflexionService,
     private readonly llm: LlmClient,
   ) {}
 
@@ -46,7 +48,7 @@ export class PromptService {
         result = await this.directionalStimulus.run(inputText, params);
         break;
       case 'reflextion':
-        // result = await this.reflextion.run(inputText, params);
+        result = await this.reflexionService.run(inputText, params);
         break;
       case 'rag':
         // result = await this.RAG.run(inputText, params);
